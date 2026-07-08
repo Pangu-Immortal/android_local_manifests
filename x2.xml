@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  local_manifests/x2.xml —— 构建 LineageOS 18.1 (Android 11) for LeEco Le Max 2 (x2)
+  放到 <源码树>/.repo/local_manifests/x2.xml，然后 `repo sync`。
+  全部指向自有仓库(Pangu-Immortal)，自包含、可复现。
+-->
+<manifest>
+  <remote name="ghpi" fetch="https://github.com/Pangu-Immortal/" revision="lineage-18.1" />
+
+  <!-- 设备树 -->
+  <project name="android_device_leeco_x2" path="device/leeco/x2" remote="ghpi" />
+  <project name="android_device_leeco_msm8996-common" path="device/leeco/msm8996-common" remote="ghpi" />
+
+  <!-- 内核 -->
+  <project name="android_kernel_leeco_msm8996" path="kernel/leeco/msm8996" remote="ghpi" />
+
+  <!-- 专有 blobs(私有仓库，需授权访问) -->
+  <project name="proprietary_vendor_leeco" path="vendor/leeco" remote="ghpi" />
+</manifest>

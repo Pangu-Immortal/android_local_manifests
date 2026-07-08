@@ -1,0 +1,80 @@
+# LineageOS 18.1 (Android 11) for LeEco Le Max 2 (x2 / LEX820)
+
+从源码构建、可长期维护的 LeEco Le Max 2（代号 `x2`，型号 LEX820 全网通，SoC 高通骁龙 820 / MSM8996）的 **LineageOS 18.1 (Android 11)** 移植。这是该设备**官方 LineageOS 支持的最高版本**（官方与社区设备树均止步 18.1）。
+
+设备原厂/RevengeOS 为 Android 9；本移植将其升级到 Android 11。
+
+## 仓库结构（全部自有仓库，非 fork）
+
+| 仓库 | 路径 | 说明 |
+|---|---|---|
+| [android_device_leeco_x2](../../../android_device_leeco_x2) | `device/leeco/x2` | x2 设备树（含本地修复） |
+| [android_device_leeco_msm8996-common](../../../android_device_leeco_msm8996-common) | `device/leeco/msm8996-common` | MSM8996 公共设备树（含本地修复） |
+| [android_kernel_leeco_msm8996](../../../android_kernel_leeco_msm8996) | `kernel/leeco/msm8996` | 内核源码（msm-3.18 CAF） |
+| proprietary_vendor_leeco（私有） | `vendor/leeco` | 专有 blobs（源自 TheMuppets） |
+| **android_local_manifests**（本仓库） | `.repo/local_manifests/x2.xml` | 组装以上仓库的清单 |
+
+上游基于 LineageOS / TheMuppets，遵循各自 LICENSE（Apache-2.0 等），保留原始版权与署名。
+
+## 构建步骤
+
+```bash
+# 1) 拉取 lineage-18.1 源码树
+mkdir lineage-18.1 && cd lineage-18.1
+repo init -u https://github.com/LineageOS/android.git -b lineage-18.1 --depth=1
+# 2) 放入本仓库的 local_manifest
+mkdir -p .repo/local_manifests
+cp /path/to/x2.xml .repo/local_manifests/x2.xml
+# 3) 同步
+repo sync -c -j8 --no-tags --no-clone-bundle
+# 4) 配置并编译
+source build/envsetup.sh
+breakfast x2
+brunch x2         # 或 mka bacon
+```
+
+产物：`out/target/product/x2/lineage-18.1-*.zip` + `boot.img` / `recovery.img` / `system.img` / `vendor.img`。
+
+## 在新版宿主机（如 Ubuntu 26.04）上构建的坑与修复
+
+lineage-18.1（2021 年代码）在较新的宿主机上编译需要这些修复：
+
+1. **老预编译 clang 缺 `libncurses.so.5` / `libtinfo.so.5`**（系统只有 .so.6）：
+   ```bash
+   sudo ln -sf /usr/lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5
+   sudo ln -sf /usr/lib/x86_64-linux-gnu/libtinfo.so.6   /usr/lib/x86_64-linux-gnu/libtinfo.so.5
+   sudo ldconfig
+   ```
+2. **`external/chromium-webview` 的 `webview.apk` 是 Git LFS 指针**（repo sync 不带 --git-lfs 时只有指针）：
+   单独 `git clone -b main https://github.com/LineageOS/android_external_chromium-webview_prebuilt_arm64` + `git lfs pull`，把真身 `webview.apk` 拷到 `external/chromium-webview/prebuilt/arm64/webview.apk`。
+3. **`mke2fs: Invalid filesystem option set: ...orphan_file`**（ART APEX / system 镜像生成失败）：新版 e2fsprogs 的 `/etc/mke2fs.conf` 含老 mke2fs 不认的 `orphan_file`：
+   ```bash
+   sudo sed -i 's/,orphan_file//g' /etc/mke2fs.conf
+   ```
+
+## 刷机步骤（bootloader 需解锁）
+
+```bash
+adb reboot bootloader
+fastboot flash boot boot.img
+fastboot flash system system.img
+fastboot flash vendor vendor.img
+fastboot flash recovery recovery.img
+fastboot format userdata          # 必须 format(建文件系统)，不要用 erase
+fastboot format cache
+fastboot reboot
+```
+
+> ⚠️ **换 ROM 必须 `format userdata`/`cache`（建立文件系统），不要只 `erase`**。仅 erase 会让 `/data` 没有文件系统 → `credstore` 因 `/data/misc/credstore` 不存在崩溃循环，卡在开机动画。
+> 也可用官方方式：刷 recovery → `adb sideload lineage-18.1-*.zip`（OTA updater-script 会正确处理 /data 与 `devinfo.sh`）。
+
+## 本移植包含的本地修复
+
+- **device/leeco/x2**：`PRODUCT_ADB_KEYS` 内置构建机的 adb 公钥 → recovery 与系统自动信任该机 adb，便于远程运维（可选，按需替换成自己的公钥）。
+- **device/leeco/msm8996-common** `init_leeco_msm8996.cpp`：`ro.leeco.devinfo` 为 `NULL`/空 时兜底为 `le_x2_whole_netcom`（LEX820）。纯 fastboot 直刷会跳过 recovery 里的 `devinfo.sh`（它负责从 `devinfo` 分区读变体并替换 build.prop 的 `NULL`），导致机型识别失败显示 `UNKNOWN` 且丢失双卡/电话配置；此兜底修复该问题。
+
+## 设备信息
+
+- 代号 `x2`，型号 `LEX820`（le_x2_whole_netcom 全网通），SoC MSM8996（骁龙 820）
+- 布局：非 A/B、非 dynamic partition、独立 system/vendor，legacy AVB（无 vbmeta/dtbo 分区）
+- Treble：支持（可选刷通用 GSI）
