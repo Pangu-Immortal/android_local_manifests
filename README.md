@@ -1,5 +1,15 @@
 # LineageOS 18.1 (Android 11) for LeEco Le Max 2 (x2 / LEX820)
 
+<div align="center">
+
+![萌萌计数器](https://count.getloli.com/get/@android_local_manifests?theme=rule34)
+
+</div>
+
+<p align="center">
+  <b>如果觉得有帮助，请点击 <a href="https://github.com/Pangu-Immortal/android_local_manifests/stargazers">Star</a> 支持一下，关注不迷路！</b>
+</p>
+
 从源码构建、可长期维护的 LeEco Le Max 2（代号 `x2`，型号 LEX820 全网通，SoC 高通骁龙 820 / MSM8996）的 **LineageOS 18.1 (Android 11)** 移植。这是该设备**官方 LineageOS 支持的最高版本**（官方与社区设备树均止步 18.1）。
 
 设备原厂/RevengeOS 为 Android 9；本移植将其升级到 Android 11。
@@ -78,8 +88,11 @@ fastboot reboot
 - 代号 `x2`，型号 `LEX820`（le_x2_whole_netcom 全网通），SoC MSM8996（骁龙 820）
 - 布局：非 A/B、非 dynamic partition、独立 system/vendor，legacy AVB（无 vbmeta/dtbo 分区）
 - Treble：支持（可选刷通用 GSI）
-
 ---
+
+## Star 趋势
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Pangu-Immortal/android_local_manifests&type=Date)](https://star-history.com/#Pangu-Immortal/android_local_manifests&Date)
 
 ## 联系与交流
 
@@ -88,20 +101,18 @@ fastboot reboot
   <a href="https://github.com/Pangu-Immortal"><img src="https://img.shields.io/badge/GitHub-Pangu--Immortal-181717?style=flat-square&logo=github" alt="GitHub"></a>
   <a href="https://t.me/+MH0wU421vyQwYzBl"><img src="https://img.shields.io/badge/Telegram-交流群-26A5E4?style=flat-square&logo=telegram" alt="Telegram"></a>
   <img src="https://img.shields.io/github/stars/Pangu-Immortal/android_local_manifests?style=flat-square&logo=github&label=Stars" alt="Stars">
-  <img src="https://komarev.com/ghpvc/?username=Pangu-Immortal&label=Visits&color=00e5a0&style=flat-square" alt="访问统计">
 </p>
 
-<table align="center">
-  <tr>
-    <td align="center"><b>微信公众号</b><br><img src="https://mengqihome.cn/assets/wechat-qr.jpg" width="140" alt="微信公众号二维码"><br>扫码关注 · 案例复盘与方法论</td>
-    <td align="center"><b>Star 趋势</b><br><a href="https://github.com/Pangu-Immortal/android_local_manifests"><img src="https://api.star-history.com/svg?repos=Pangu-Immortal/android_local_manifests&type=Date" width="320" alt="Star History"></a></td>
-  </tr>
-</table>
+<p align="center">
+  <b>微信公众号</b><br>
+  <img src="https://mengqihome.cn/assets/wechat-qr.jpg" width="140" alt="微信公众号二维码"><br>
+  扫码关注 · 案例复盘与方法论
+</p>
 
 **更多入口**：[GitHub 主页](https://github.com/Pangu-Immortal) · [Telegram 群](https://t.me/+MH0wU421vyQwYzBl) · [官网](https://mengqihome.cn)
 
 ## 许可
 
-本项目采用 [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0) 授权：**允许非商业目的的使用、修改与分发；禁止任何商业性使用**。商业授权请联系 [hello@mengqihome.cn](mailto:hello@mengqihome.cn)。
+本项目采用 [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0) 授权：**允许非商业目的的使用、修改与分发；禁止任何商业性使用**。商业授权请联系 [yugu88@126.com](mailto:yugu88@126.com)。
 
-<!-- managed-block:v1 -->
+<!-- managed-block:v2 -->
